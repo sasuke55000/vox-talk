@@ -1,13 +1,36 @@
 {
-	"name": "vox-talk",
-	"version": "1.0.0",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"start": "node index.js",
-		"dev": "node --watch index.js"
-	},
-	"dependencies": {
-		"discord.js": "^14.25.1"
-	}
+    "name": "vox-talk",
+    "version": "1.0.0",
+    "description": "",
+    "main": "bot.ts",
+    "type": "module",
+    "scripts": {
+        "start": "node src/bot.ts",
+        "dev": "tsx watch src/bot.ts",
+        "check": "tsc --noEmit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sasuke55000/vox-talk.git"
+    },
+    "author": "sasuke55000",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sasuke55000/vox-talk/issues"
+    },
+    "homepage": "https://github.com/sasuke55000/vox-talk#readme",
+    "dependencies": {
+        "@types/node": "^22.20.3",
+        "discord.js": "^14.27.0",
+        "typescript": "^6.0.3"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0",
+        "jiti": "^2.7.0",
+        "prettier": "^3.9.7",
+        "tsx": "^4.23.13",
+        "typescript-eslint": "^8.70.0"
+    }
 }

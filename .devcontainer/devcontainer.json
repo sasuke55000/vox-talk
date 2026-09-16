@@ -1,27 +1,32 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "vox-talk",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie",
-	"runArgs": [
-		"--env-file",
-		"${localWorkspaceFolder}/.env"
-	],
-	"postCreateCommand": "npm install"
+  "name": "vox-talk",
+  "image": "node:22-bookworm",
+    "remoteUser": "node",
+    "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"],
+    "postCreateCommand": "npm ci",
+    "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+                "prettier.printWidth": 120,
+                "prettier.tabWidth": 4,
+                "prettier.semi": true,
+                "prettier.singleQuote": true,
+                "prettier.quoteProps": "consistent",
+                "prettier.bracketSpacing": true,
+                "prettier.arrowParens": "always",
+                "prettier.endOfLine": "lf",
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+                "eslint.useFlatConfig": true
+            }
+    }
+  }
 }
