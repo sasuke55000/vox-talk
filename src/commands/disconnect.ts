@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import {} from '@discordjs/voice';
+import { getVoiceConnection } from '@discordjs/voice';
+import { disconnectVC } from '../functions/disconnectVC';
 
 const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName('disconnect')
@@ -8,8 +9,12 @@ const data: SlashCommandBuilder = new SlashCommandBuilder()
 export default {
     data: data,
     async execute(interaction: ChatInputCommandInteraction) {
-        // Here you would add the logic to disconnect the bot from the voice channel.
-        // This typically involves using the @discordjs/voice library to destroy the connection.
+        const connection = getVoiceConnection(interaction.guild?.id || '');
+        if (!connection) {
+            await interaction.reply({ content: 'ボイスチャンネルに接続していません。' });
+            return;
+        }
+        await disconnectVC(connection);
 
         await interaction.reply({ content: 'ボイスチャンネルから切断しました。' });
     },
