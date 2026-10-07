@@ -2,6 +2,7 @@ import { Events, type Message } from 'discord.js';
 import { vcChannelId } from '../functions/config';
 import { play } from '../functions/play';
 import { getVoiceConnection } from '@discordjs/voice';
+import { enqueuePlay } from '../functions/enqueuePlay.js';
 
 export default {
     name: Events.MessageCreate,
@@ -14,7 +15,7 @@ export default {
         console.log(`Message received from ${message.author.tag}: ${message.content}`);
 
         try {
-            await play(getVoiceConnection(message.guild?.id || ''), message.content);
+            await enqueuePlay(getVoiceConnection(message.guild?.id || ''), message.content);
         } catch (err) {
             console.error(`Error occurred while processing message: ${err}`);
             throw err;

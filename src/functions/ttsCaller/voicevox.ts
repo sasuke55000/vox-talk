@@ -34,28 +34,34 @@ export class VoicevoxApiCaller {
             speaker: String(speaker),
         });
 
-        const queryResponse = await fetch(`${this.baseUrl}/audio_query?${queryParams}`, { method: 'POST' });
+        try {
+            const queryResponse = await fetch(`${this.baseUrl}/audio_query?${queryParams}`, { method: 'POST' });
 
-        if (!queryResponse.ok) {
-            throw new Error(`VOICEVOX audio_query failed: ${queryResponse.status} ${await queryResponse.text()}`);
+            if (!queryResponse.ok) {
+                throw new Error(`VOICEVOX audio_query failed: ${queryResponse.status} ${await queryResponse.text()}`);
+            }
+
+            const audioQuery: unknown = await queryResponse.json();
+            // audioQuery.speedScale = settings.speedScale;
+            // audioQuery.pitchScale = settings.pitchScale;
+            // audioQuery.intonationScale = settings.intonationScale;
+            console.debug('VOICEVOX audio_query response:', audioQuery);
+
+            const synthesisResponse = await fetch(`${this.baseUrl}/synthesis?speaker=${speaker}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(audioQuery),
+            });
+
+            if (!synthesisResponse.ok) {
+                throw new Error(
+                    `VOICEVOX synthesis failed: ${synthesisResponse.status} ${await synthesisResponse.text()}`,
+                );
+            }
+            return Buffer.from(await synthesisResponse.arrayBuffer());
+        } catch (error) {
+            console.error('Error during VOICEVOX API call:', error);
+            throw error;
         }
-
-        const audioQuery: unknown = await queryResponse.json();
-        // audioQuery.speedScale = settings.speedScale;
-        // audioQuery.pitchScale = settings.pitchScale;
-        // audioQuery.intonationScale = settings.intonationScale;
-        console.debug('VOICEVOX audio_query response:', audioQuery);
-
-        const synthesisResponse = await fetch(`${this.baseUrl}/synthesis?speaker=${speaker}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(audioQuery),
-        });
-
-        if (!synthesisResponse.ok) {
-            throw new Error(`VOICEVOX synthesis failed: ${synthesisResponse.status} ${await synthesisResponse.text()}`);
-        }
-
-        return Buffer.from(await synthesisResponse.arrayBuffer());
     }
 }
