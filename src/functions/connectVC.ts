@@ -1,5 +1,13 @@
-import { joinVoiceChannel, VoiceConnection, VoiceConnectionStatus, entersState } from '@discordjs/voice';
+import {
+    joinVoiceChannel,
+    VoiceConnection,
+    VoiceConnectionStatus,
+    entersState,
+    createAudioPlayer,
+    NoSubscriberBehavior,
+} from '@discordjs/voice';
 import { type VoiceBasedChannel, ChannelType } from 'discord.js';
+import { vcPlayer } from './config';
 
 export async function connectVC(channel: VoiceBasedChannel): Promise<VoiceConnection> {
     if (!channel || channel.type !== ChannelType.GuildVoice) {
@@ -16,6 +24,15 @@ export async function connectVC(channel: VoiceBasedChannel): Promise<VoiceConnec
     try {
         console.debug(`Attempting to connect to voice channel: ${channel.name}`);
         await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
+
+        const player = createAudioPlayer({
+            behaviors: {
+                noSubscriber: NoSubscriberBehavior.Pause,
+            },
+        });
+        connection.subscribe(player);
+        vcPlayer.set(connection.joinConfig.guildId, player);
+
         return connection;
     } catch (error) {
         connection.destroy();

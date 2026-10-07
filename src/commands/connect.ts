@@ -1,6 +1,7 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, VoiceChannel } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember, VoiceChannel, TextChannel } from 'discord.js';
 import {} from '@discordjs/voice';
 import { connectVC } from '../functions/connectVC';
+import { vcChannelId } from '../functions/config';
 
 const data: SlashCommandBuilder = new SlashCommandBuilder()
     .setName('connect')
@@ -11,6 +12,7 @@ export default {
     async execute(interaction: ChatInputCommandInteraction) {
         const guild = interaction.guild;
         const member = await guild.members.fetch(interaction.member.id);
+        const textChannel: TextChannel = interaction.channel;
         const channel: VoiceChannel = member?.voice.channel as VoiceChannel;
 
         console.debug(`User ${member.user.tag} is trying to connect the bot to channel: ${channel?.name}`);
@@ -27,6 +29,7 @@ export default {
 
         try {
             await connectVC(channel);
+            vcChannelId.set(guild.id, textChannel.id);
             await interaction.reply({ content: `${channel.name} に参加しました。` });
         } catch (error) {
             console.error('Error connecting to voice channel:', error);

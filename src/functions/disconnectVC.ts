@@ -1,4 +1,5 @@
 import { VoiceConnection, VoiceConnectionStatus, entersState } from '@discordjs/voice';
+import { vcPlayer } from './config.js';
 
 export async function disconnectVC(connection: VoiceConnection): Promise<void> {
     const channel = connection.joinConfig.channelId;
@@ -14,6 +15,7 @@ export async function disconnectVC(connection: VoiceConnection): Promise<void> {
         console.error(`Error while trying to disconnect from voice channel: ${channel}`, error);
         throw error;
     } finally {
+        vcPlayer.delete(connection.joinConfig.guildId);
         connection.destroy();
         console.debug(`Voice connection destroyed for guild: ${channel}`);
     }
