@@ -1,0 +1,18 @@
+services:
+    app:
+        image: node:22-bookworm
+        command: sleep infinity
+        working_dir: /workspace/vox-talk
+        volumes:
+            - ..:/workspace/vox-talk
+        env_file:
+            - ../.env
+        environment:
+            VOICEVOX_URL: http://voicevox:50021
+        depends_on:
+            - voicevox
+
+    voicevox:
+        image: voicevox/voicevox_engine:cpu-latest
+        ports:
+            - '127.0.0.1:50021:50021'

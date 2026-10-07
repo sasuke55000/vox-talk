@@ -1,17 +1,13 @@
 {
-  "name": "vox-talk",
-  "image": "node:22-bookworm",
+    "name": "vox-talk",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
     "remoteUser": "node",
-    "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"],
     "postCreateCommand": "npm ci",
     "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
-      ],
+    "customizations": {
+        "vscode": {
+            "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
             "settings": {
                 "editor.formatOnSave": true,
                 "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -27,6 +23,6 @@
 
                 "eslint.useFlatConfig": true
             }
+        }
     }
-  }
 }
