@@ -3,6 +3,8 @@ import { vcChannelId } from '../functions/config';
 import { play } from '../functions/play';
 import { getVoiceConnection } from '@discordjs/voice';
 import { enqueuePlay } from '../functions/enqueuePlay.js';
+import { parseDiscordMsg } from '../functions/parseDiscordMsg.js';
+import { parseEmoji } from '../functions/parseEmoji.js';
 
 export default {
     name: Events.MessageCreate,
@@ -13,9 +15,12 @@ export default {
         if (message.channel.id !== vcChannelId.get(message.guild?.id || '')) return;
 
         console.log(`Message received from ${message.author.tag}: ${message.content}`);
+        let text = message.content;
+        text = await parseDiscordMsg(message);
+        text = parseEmoji(text);
 
         try {
-            await enqueuePlay(getVoiceConnection(message.guild?.id || ''), message.content);
+            await enqueuePlay(getVoiceConnection(message.guild?.id || ''), text);
         } catch (err) {
             console.error(`Error occurred while processing message: ${err}`);
             throw err;
