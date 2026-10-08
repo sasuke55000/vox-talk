@@ -41,9 +41,9 @@ export async function play(guildId: string): Promise<void> {
 
             console.log(`Playing audio for guild: ${connection.joinConfig.guildId}`);
             // TODO: 絵文字読み上げ、長音/同音連続
+            await entersState(player, AudioPlayerStatus.Idle, 5 * 60_000);
             player.play(resource);
             await entersState(player, AudioPlayerStatus.Playing, 100);
-            await entersState(player, AudioPlayerStatus.Idle, 5 * 60_000);
             console.log(`Finished playing audio for guild: ${connection.joinConfig.guildId}`);
         } catch (error) {
             console.error(`Error while processing queue item in guild: ${guildId}`, error);

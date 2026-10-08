@@ -29,6 +29,9 @@ export class VoicevoxApiCaller {
         if (settings.speedScale <= 0) {
             throw new Error('speedScale must be greater than 0');
         }
+        if (text.length > 200) {
+            text = text.substring(0, 200);
+        }
         const queryParams = new URLSearchParams({
             text,
             speaker: String(speaker),
