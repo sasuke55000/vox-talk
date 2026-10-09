@@ -25,7 +25,7 @@ export class VoicevoxApiCaller {
         this.baseUrl = baseUrl.replace(/\/+$/, '');
     }
 
-    async synthesize(text: string, speaker: number = 1, settings: VoicevoxCallerConfig): Promise<Buffer> {
+    async synthesize(text: string, settings: VoicevoxCallerConfig): Promise<Buffer> {
         if (settings.speedScale <= 0) {
             throw new Error('speedScale must be greater than 0');
         }
@@ -34,7 +34,7 @@ export class VoicevoxApiCaller {
         }
         const queryParams = new URLSearchParams({
             text,
-            speaker: String(speaker),
+            speaker: String(settings.speaker),
         });
 
         try {
@@ -44,13 +44,13 @@ export class VoicevoxApiCaller {
                 throw new Error(`VOICEVOX audio_query failed: ${queryResponse.status} ${await queryResponse.text()}`);
             }
 
-            const audioQuery: unknown = await queryResponse.json();
-            // audioQuery.speedScale = settings.speedScale;
-            // audioQuery.pitchScale = settings.pitchScale;
-            // audioQuery.intonationScale = settings.intonationScale;
+            const audioQuery: VoicevoxAudioQuery = await queryResponse.json();
+            audioQuery.speedScale = settings.speedScale;
+            audioQuery.pitchScale = settings.pitchScale;
+            audioQuery.intonationScale = settings.intonationScale;
             console.debug('VOICEVOX audio_query response:', audioQuery);
 
-            const synthesisResponse = await fetch(`${this.baseUrl}/synthesis?speaker=${speaker}`, {
+            const synthesisResponse = await fetch(`${this.baseUrl}/synthesis?speaker=${settings.speaker}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(audioQuery),

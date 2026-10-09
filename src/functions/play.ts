@@ -1,6 +1,6 @@
 import { AudioPlayerStatus, createAudioResource, entersState, StreamType } from '@discordjs/voice';
 import { vcPlayer, vcPlaying, vcQueue } from './config.js';
-import { VoicevoxApiCaller } from './ttsCaller/voicevox.js';
+import { VoicevoxApiCaller, type VoicevoxCallerConfig } from './ttsCaller/voicevox.js';
 import { Readable } from 'stream';
 
 export async function play(guildId: string): Promise<void> {
@@ -24,12 +24,13 @@ export async function play(guildId: string): Promise<void> {
 
         try {
             const voicevoxCaller = new VoicevoxApiCaller();
-            const audioBuffer = await voicevoxCaller.synthesize(text, 1, {
+            const config: VoicevoxCallerConfig = {
                 speaker: 47,
-                speedScale: 2.0,
-                pitchScale: 1.0,
+                speedScale: 1.0,
+                pitchScale: 0,
                 intonationScale: 1.0,
-            });
+            };
+            const audioBuffer = await voicevoxCaller.synthesize(text, config);
             const resource = createAudioResource(Readable.from([audioBuffer]), {
                 inputType: StreamType.Arbitrary,
             });
