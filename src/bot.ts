@@ -3,9 +3,13 @@ import { initCommands } from './initCommands';
 import { initDB } from './functions/database.js';
 import { registerCommands } from './handlers/commandHandler';
 import { registerEvents } from './handlers/eventHandler';
+import { initTTSCaller } from './functions/initTTSCaller.js';
 
 // init Database
 initDB();
+
+// init TTS Caller
+initTTSCaller();
 
 const client: Client = new Client({
     intents: [

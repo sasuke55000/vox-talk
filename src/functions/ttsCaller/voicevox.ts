@@ -1,8 +1,10 @@
-export interface VoicevoxCallerConfig {
-    speaker: number;
-    speedScale: number;
-    pitchScale: number;
-    intonationScale: number;
+import { type TTSSettings, TTSProvider } from '../config.js';
+
+export interface VoicevoxCallerConfig extends TTSSettings {
+    speaker: string;
+    speed: number;
+    pitch: number;
+    intonation: number;
 }
 
 interface VoicevoxAudioQuery {
@@ -18,23 +20,25 @@ interface VoicevoxAudioQuery {
     kana: string;
 }
 
-export class VoicevoxApiCaller {
-    private readonly baseUrl: string;
+class VoicevoxApiCaller extends TTSProvider<VoicevoxCallerConfig> {
+    provider = 'voicevox';
+    baseUrl: string;
 
     constructor(baseUrl = process.env.VOICEVOX_URL ?? 'http://127.0.0.1:50021') {
+        super();
         this.baseUrl = baseUrl.replace(/\/+$/, '');
     }
 
     async synthesize(text: string, settings: VoicevoxCallerConfig): Promise<Buffer> {
-        if (settings.speedScale <= 0) {
-            throw new Error('speedScale must be greater than 0');
+        if (settings.speed <= 0) {
+            throw new Error('speed must be greater than 0');
         }
         if (text.length > 200) {
             text = text.substring(0, 200);
         }
         const queryParams = new URLSearchParams({
             text,
-            speaker: String(settings.speaker),
+            speaker: settings.speaker,
         });
 
         try {
@@ -45,9 +49,9 @@ export class VoicevoxApiCaller {
             }
 
             const audioQuery: VoicevoxAudioQuery = await queryResponse.json();
-            audioQuery.speedScale = settings.speedScale;
-            audioQuery.pitchScale = settings.pitchScale;
-            audioQuery.intonationScale = settings.intonationScale;
+            audioQuery.speedScale = settings.speed;
+            audioQuery.pitchScale = settings.pitch;
+            audioQuery.intonationScale = settings.intonation;
             console.debug('VOICEVOX audio_query response:', audioQuery);
 
             const synthesisResponse = await fetch(`${this.baseUrl}/synthesis?speaker=${settings.speaker}`, {
@@ -68,3 +72,5 @@ export class VoicevoxApiCaller {
         }
     }
 }
+
+export default new VoicevoxApiCaller();

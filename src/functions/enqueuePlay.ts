@@ -1,7 +1,5 @@
 import { createAudioResource, StreamType, type VoiceConnection } from '@discordjs/voice';
 import {} from 'discord.js';
-import { VoicevoxApiCaller } from './ttsCaller/voicevox.js';
-import { Readable } from 'stream';
 import { vcPlayer, vcPlaying, vcQueue, type QueueItem } from './config.js';
 import { play } from './play.js';
 

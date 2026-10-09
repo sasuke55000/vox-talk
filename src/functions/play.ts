@@ -1,7 +1,7 @@
 import { AudioPlayerStatus, createAudioResource, entersState, StreamType } from '@discordjs/voice';
-import { vcPlayer, vcPlaying, vcQueue } from './config.js';
-import { VoicevoxApiCaller, type VoicevoxCallerConfig } from './ttsCaller/voicevox.js';
+import { TTSProviders, vcPlayer, vcPlaying, vcQueue } from './config.js';
 import { Readable } from 'stream';
+import type { VoicevoxCallerConfig } from './ttsCaller/voicevox.js';
 
 export async function play(guildId: string): Promise<void> {
     vcPlaying.set(guildId, true);
@@ -23,12 +23,16 @@ export async function play(guildId: string): Promise<void> {
         console.log(`Playing text for guild: ${guildId}, text: ${text}`);
 
         try {
-            const voicevoxCaller = new VoicevoxApiCaller();
+            const voicevoxCaller = TTSProviders.get('voicevox');
+            if (!voicevoxCaller) {
+                throw new Error(`Voicevox TTS provider not found`);
+            }
+
             const config: VoicevoxCallerConfig = {
-                speaker: 47,
-                speedScale: 1.0,
-                pitchScale: 0,
-                intonationScale: 1.0,
+                speaker: String(47),
+                speed: 1.0,
+                pitch: 0,
+                intonation: 0,
             };
             const audioBuffer = await voicevoxCaller.synthesize(text, config);
             const resource = createAudioResource(Readable.from([audioBuffer]), {
