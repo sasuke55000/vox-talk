@@ -5,6 +5,7 @@ import { getVoiceConnection } from '@discordjs/voice';
 import { enqueuePlay } from '../functions/enqueuePlay.js';
 import { parseDiscordMsg } from '../functions/parseDiscordMsg.js';
 import { parseEmoji } from '../functions/parseEmoji.js';
+import { parseURL } from '../functions/parseURL.js';
 
 export default {
     name: Events.MessageCreate,
@@ -15,9 +16,10 @@ export default {
         if (message.channel.id !== vcChannelId.get(message.guild?.id || '')) return;
 
         console.log(`Message received from ${message.author.tag}: ${message.content}`);
-        let text = message.content;
-        text = await parseDiscordMsg(message);
+
+        let text = await parseDiscordMsg(message);
         text = parseEmoji(text);
+        text = await parseURL(text);
 
         try {
             await enqueuePlay(getVoiceConnection(message.guild?.id || ''), text);

@@ -1,9 +1,9 @@
 import emojiRegex from 'emoji-regex';
 import emojiData from 'emojibase-data/ja/data.json' with { type: 'json' };
 
-const normalizeEmoji = (emoji: string) => emoji.replace(/[\uFE0E\uFE0F]/g, '');
 const regex = emojiRegex();
 
+const normalizeEmoji = (emoji: string) => emoji.replace(/[\uFE0E\uFE0F]/g, '');
 // const emojiMap = new Map(emojiData.map((e) => [normalizeEmoji(e.emoji), e.label]));
 const emojiMap = new Map(
     emojiData.flatMap((emoji) => [
