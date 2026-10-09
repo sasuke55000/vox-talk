@@ -1,7 +1,11 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { initCommands } from './initCommands';
+import { initDB } from './functions/database.js';
 import { registerCommands } from './handlers/commandHandler';
 import { registerEvents } from './handlers/eventHandler';
+
+// init Database
+initDB();
 
 const client: Client = new Client({
     intents: [
