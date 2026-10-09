@@ -7,28 +7,6 @@ const token: string = process.env.DISCORD_TOKEN as string;
 const clientId: string = process.env.CLIENT_ID as string;
 
 export async function initCommands() {
-    await clearCommands();
-    await registerCommands();
-}
-
-// Clear all existing commands before registering new ones to avoid duplicates
-async function clearCommands() {
-    const rest = new REST().setToken(token);
-
-    try {
-        // Delete all existing commands before registering new ones to avoid duplicates
-        await rest
-            .put(Routes.applicationCommands(clientId), { body: [] })
-            .then(() => console.log('Successfully deleted all application commands.'));
-    } catch (error) {
-        // And of course, make sure you catch and log any errors!
-        console.error(error);
-        throw error;
-    }
-}
-
-// Register commands from the commands folder
-async function registerCommands() {
     const rest = new REST().setToken(token);
     const commands = [];
     const foldersPath = path.join(import.meta.dirname, 'commands');

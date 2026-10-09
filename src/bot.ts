@@ -1,8 +1,7 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import { initCommands } from './initCommands';
 import { initDB } from './functions/database.js';
-import { registerCommands } from './handlers/commandHandler';
-import { registerEvents } from './handlers/eventHandler';
+import { registerCommands } from './handlers/commandHandler.js';
+import { registerEvents } from './handlers/eventHandler.js';
 import { initTTSCaller } from './functions/initTTSCaller.js';
 
 // init Database
@@ -20,7 +19,6 @@ const client: Client = new Client({
     ],
 });
 
-//await initCommands();
 // Load commands
 await registerCommands(client);
 // Load events
